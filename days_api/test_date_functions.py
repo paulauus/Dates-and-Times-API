@@ -129,10 +129,11 @@ def test_get_current_age_birthday_passed(year):
     """Checks that the function handles valid input."""
 
     now = date.today() 
-    birthdate = date(year, now.month, now.day - 2)
+    birthdate = date(year, now.month - 1, now.day)
     expected_age = now.year - birthdate.year
 
     result = get_current_age(birthdate)
 
     assert isinstance(result, int)
     assert result == expected_age
+    

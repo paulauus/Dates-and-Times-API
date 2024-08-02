@@ -4,10 +4,17 @@ from datetime import datetime, date
 
 
 def convert_to_datetime(date_val: str) -> datetime:
-    pass
+    """Converts a dd.mm.yyyy input into a datetime object."""
+    try:
+        return datetime.strptime(date_val, "%d.%m.%Y")
+    except ValueError:
+        raise ValueError("Unable to convert value to datetime.")
 
 
 def get_days_between(first: datetime, last: datetime) -> int:
+    """Calculates the no. of days between given dates."""
+    if isinstance(first, datetime) and isinstance(last, datetime):
+        answer = (last - first).days
     pass
 
 
