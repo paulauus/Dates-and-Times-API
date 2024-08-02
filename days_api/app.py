@@ -30,14 +30,18 @@ def index():
     """Returns an API welcome messsage."""
     return jsonify({"message": "Welcome to the Days API."})
 
+
 @app.route("/between", methods=["POST"])
 def calculate_days_between():
     """Returns the number of days between two dates."""
     add_to_history(request)
     data = request.get_json()
-    
+
     if "first" not in data or "last" not in data:
         return {"error": "Missing required data."}, 400
+
+    if not isinstance(data["first"], str) or not isinstance(data["last"], str):
+        return {"error": "Unable to convert value to datetime."}, 400
 
     try:
         first_date = convert_to_datetime(data["first"])
@@ -52,13 +56,36 @@ def calculate_days_between():
 def say_which_weekday():
     "Returns the day of the week a specific date is."
     add_to_history(request)
-    pass
+    data = request.get_json()
+
+    if "date" not in data.keys():
+        return {"error": "Missing required data."}, 400
+    
+    try:
+        week = convert_to_datetime(data["date"])
+    except ValueError:
+        return {"error": "Unable to convert value to datetime."}, 400
+    
+    return {"weekday": get_day_of_week_on(week)}, 200
 
 @app.route("/history", methods=["GET"])
 def details_of_requests():
     "Returns details on the last number of requests to the API."
     add_to_history(request)
-    pass
+    args = request.args.to_dict()
+
+    # Default number to 5 if not provided
+    number = args.get("number", "5")  # Default value as string
+
+    try:
+        number = int(number)
+    except ValueError:
+        return {"error": "Number must be an integer."}, 400
+
+    if not 1 <= number <= 20:
+        return {"error": "Number must be an integer between 1 and 20."}, 400
+
+    return app_history[-number:]
 
 @app.route("/history", methods=["DELETE"])
 def delete_request_history():
