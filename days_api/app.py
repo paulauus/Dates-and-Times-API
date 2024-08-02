@@ -4,7 +4,7 @@
 
 from datetime import datetime, date
 
-from flask import Flask, Response, request, jsonify
+from flask import Flask, request, jsonify
 
 from date_functions import (convert_to_datetime, get_day_of_week_on,
                             get_days_between, get_current_age)
@@ -12,8 +12,6 @@ from date_functions import (convert_to_datetime, get_day_of_week_on,
 app_history = []
 
 app = Flask(__name__)
-app.config['TESTING'] = True
-app.config['DEBUG'] = True
 
 
 def add_to_history(current_request):
@@ -68,14 +66,19 @@ def say_which_weekday():
     
     return {"weekday": get_day_of_week_on(week)}, 200
 
-@app.route("/history", methods=["GET"])
-def details_of_requests():
-    "Returns details on the last number of requests to the API."
+
+@app.route("/history", methods=["GET", "DELETE"])
+def history():
+    """Handles GET and DELETE requests for request history."""
+    if request.method == "DELETE":
+        add_to_history(request)
+        app_history.clear()
+        return {"status": "History cleared"}, 200
+
     add_to_history(request)
     args = request.args.to_dict()
 
-    # Default number to 5 if not provided
-    number = args.get("number", "5")  # Default value as string
+    number = args.get("number", "5")  # Default value is 5
 
     try:
         number = int(number)
@@ -85,13 +88,8 @@ def details_of_requests():
     if not 1 <= number <= 20:
         return {"error": "Number must be an integer between 1 and 20."}, 400
 
-    return app_history[-number:]
+    return app_history[-number:][::-1]
 
-@app.route("/history", methods=["DELETE"])
-def delete_request_history():
-    "Deletes details of all previous requests to the API."
-    app_history.clear()
-    return {"status": "History cleared"}, 200
 
 @app.route("/current_age", methods=["GET"])
 def give_current_age_in_years():

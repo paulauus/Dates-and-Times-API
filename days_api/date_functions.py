@@ -6,7 +6,7 @@ from datetime import datetime, date
 def convert_to_datetime(date_val: str) -> datetime:
     """Converts a dd.mm.yyyy input into a datetime object."""
     try:
-        return datetime.strptime(date_val, "%d.%m.%Y")
+        return datetime.strptime(str(date_val), "%d.%m.%Y")
     except ValueError:
         raise ValueError("Unable to convert value to datetime.")
 
