@@ -80,7 +80,7 @@ def details_of_requests():
     try:
         number = int(number)
     except ValueError:
-        return {"error": "Number must be an integer."}, 400
+        return {"error": "Number must be an integer between 1 and 20."}, 400
 
     if not 1 <= number <= 20:
         return {"error": "Number must be an integer between 1 and 20."}, 400
@@ -90,14 +90,24 @@ def details_of_requests():
 @app.route("/history", methods=["DELETE"])
 def delete_request_history():
     "Deletes details of all previous requests to the API."
-    pass
+    app_history.clear()
+    return {"status": "History cleared"}, 200
 
 @app.route("/current_age", methods=["GET"])
 def give_current_age_in_years():
     "Returns a current age in years based on a given birthdate."
     add_to_history(request)
-    pass
 
+    args = request.args.to_dict()
+    birthdate = args.get("date")
+
+    if not birthdate and not isinstance(birthdate, date):
+        return {"error": "Date parameter is required."}, 400
+
+    try:
+        return {"current_age": get_current_age(birthdate)}
+    except TypeError:
+        return {"error": "Value for data parameter is invalid."}, 400
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
