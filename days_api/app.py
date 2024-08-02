@@ -32,9 +32,21 @@ def index():
 
 @app.route("/between", methods=["POST"])
 def calculate_days_between():
-    "Returns the number of days between two dates."
+    """Returns the number of days between two dates."""
     add_to_history(request)
-    pass
+    data = request.get_json()
+    
+    if "first" not in data or "last" not in data:
+        return {"error": "Missing required data."}, 400
+
+    try:
+        first_date = convert_to_datetime(data["first"])
+        last_date = convert_to_datetime(data["last"])
+    except ValueError:
+        return {"error": "Unable to convert value to datetime."}, 400
+
+    days = get_days_between(first_date, last_date)
+    return {"days": days}, 200
 
 @app.route("/weekday", methods=["POST"])
 def say_which_weekday():
