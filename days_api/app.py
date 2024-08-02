@@ -30,7 +30,7 @@ def index():
 
 
 @app.route("/between", methods=["POST"])
-def calculate_days_between():
+def between():
     """Returns the number of days between two dates."""
     add_to_history(request)
     data = request.get_json()
@@ -51,7 +51,7 @@ def calculate_days_between():
     return {"days": days}, 200
 
 @app.route("/weekday", methods=["POST"])
-def say_which_weekday():
+def weekday():
     "Returns the day of the week a specific date is."
     add_to_history(request)
     data = request.get_json()
