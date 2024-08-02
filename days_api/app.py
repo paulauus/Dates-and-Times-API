@@ -30,6 +30,31 @@ def index():
     """Returns an API welcome messsage."""
     return jsonify({"message": "Welcome to the Days API."})
 
+@app.route("/between", methods=["POST"])
+def calculate_days_between():
+    "Returns the number of days between two dates."
+    pass
+
+@app.route("/weekday", methods=["POST"])
+def say_which_weekday():
+    "Returns the day of the week a specific date is."
+    pass
+
+@app.route("/history", methods=["GET"])
+def details_of_requests():
+    "Returns details on the last number of requests to the API."
+    pass
+
+@app.route("/history", methods=["DELETE"])
+def delete_request_history():
+    "Deletes details of all previous requests to the API."
+    pass
+
+@app.route("/current_age", methods=["GET"])
+def give_current_age_in_years():
+    "Returns a current age in years based on a given birthdate."
+    pass
+
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
