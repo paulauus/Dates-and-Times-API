@@ -33,16 +33,19 @@ def index():
 @app.route("/between", methods=["POST"])
 def calculate_days_between():
     "Returns the number of days between two dates."
+    add_to_history(request)
     pass
 
 @app.route("/weekday", methods=["POST"])
 def say_which_weekday():
     "Returns the day of the week a specific date is."
+    add_to_history(request)
     pass
 
 @app.route("/history", methods=["GET"])
 def details_of_requests():
     "Returns details on the last number of requests to the API."
+    add_to_history(request)
     pass
 
 @app.route("/history", methods=["DELETE"])
@@ -53,6 +56,7 @@ def delete_request_history():
 @app.route("/current_age", methods=["GET"])
 def give_current_age_in_years():
     "Returns a current age in years based on a given birthdate."
+    add_to_history(request)
     pass
 
 
